@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Shisu's Adventure</title>
+    <script type = "text/javascript" src="phaser.min.js"></script> 
+    <style type="text/css">
+        body {
+            margin:0 ;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var config = {
+    type: Phaser.AUTO,
+    width: 1280,
+    height: 720,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 350 },
+            debug: false
+        }
+    },
+    //input : {gamepad:true},
+    scene: {
+        preload: preload,
+        create: create,
+        update: update},
+
+};
+
+var game = new Phaser.Game(config); 
+
+var player;
+var pv = 3;
+var parcours;
+var cursors;
+var wallLayer;
+var gameOver = false;
+
+    
+
+
+function preload ()
+{   
+    this.load.image('back', 'assets/PNG/background.png');
+    this.load.image('back', 'assets/PNG/Power_Up_Stopwatch.png');
+    this.load.image('back', 'assets/PNG/Power_Up_Speed.png');
+    this.load.image('back', 'assets/PNG/Particules_bubbles.png');
+    
+    this.load.spritesheet('perso', 'assets/PNG/mermaid.png', { frameWidth: 32, frameHeight: 35});
+    this.load.spritesheet('spike', 'assets/PNG/ennemi_spike.png', { frameWidth: 32, frameHeight: 30});
+    this.load.spritesheet('shell', 'assets/PNG/ennemi_shell.png', { frameWidth: 32, frameHeight: 30});
+    this.load.spritesheet('heart', 'assets/PNG/PV.png', { frameWidth: 16, frameHeight: 16});
+    
+    this.load.image('tiles','assets/PNG/Tiles.png');
+    this.load.tilemapTiledJSON('map','assets/Map.json');
+                    
+ 
+}
+
+
+function create ()
+{
+
+    this.add.image(0,0, 'back');
+    //.setScrollFactor(0);
+    
+    //const map = this.make.tilemap({key : 'map'});
+    //const tileset = map.addTilesetImage('tilesmap','tiles');
+    
+    //wallLayer = map.createStaticLayer('parcours', tileset);
+    
+    //wallLayer.setCollisionByExclusion(-1,true);
+
+    player = this.physics.add.sprite(0, 0, 'perso');
+    
+    player.setBounce(0);
+    player.setCollideWorldBounds(true);
+    
+    //this.physics.add.collider(player, wallLayer);
+    
+    //this.cameras.main.startFollow(player, true, 0.05,0.05);
+    //this.cameras.main.setBounds(0, 0,1280, 720);
+    //this.physics.world.setBounds(0, 0,1280, 720);
+
+
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 3 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'turn',
+        frames: [ { key: 'perso', frame: 4 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('perso', { start: 5, end: 8 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    
+    
+    cursors = this.input.keyboard.createCursorKeys();
+
+
+ 
+    
+    
+}
+
+  
+function update ()
+{
+
+
+    
+    if (gameOver)
+    {
+        return;
+    }
+
+    if (cursors.left.isDown)
+    {
+        if (cursors.a.isDown)
+        {
+            player.setVelocityX(-220);
+        }
+        else
+        {
+            player.setVelocityX(-160);
+        }
+        player.anims.play('left', true);
+    }
+    else if (cursors.right.isDown)
+    {
+        if (cursors.a.isDown)
+        {
+            player.setVelocityX(220);
+        }
+        else
+        {
+            player.setVelocityX(160);
+        }
+        player.anims.play('right', true);
+    }
+    else
+    {
+        player.setVelocityX(0);
+
+        player.anims.play('turn');
+    }
+
+    if (cursors.up.isDown )
+    {
+        player.setVelocityY(-100);
+    }
+
+
+ 
+
+}
+
+</script>
+</body>
+</html>
